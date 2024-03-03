@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
 
 env:
   TIZEN_STUDIO_VER: 4.5.1
@@ -74,17 +75,6 @@ jobs:
       - name: Release Build Result
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.RELEASE_VERSION }}
+          tag_name: TizenBrew
           files: |
             tizenbrew-app/TizenBrew/release/TizenBrewStandalone.wgt
-
-      - name: Zip USB Demo Package
-        run: |
-          zip -r tizenbrew-app/TizenBrew/release/TizenBrewStandaloneUSBDemo.zip userwidget/
-
-      - name: Release USB Demo Package
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          files: |
-            tizenbrew-app/TizenBrew/release/TizenBrewStandaloneUSBDemo.zip
