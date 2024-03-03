@@ -13,8 +13,8 @@ function startDebugging(port, adb_conn, ip) {
             res => res.json()
         ).then(
             debuggerJson => {
-                global.inDebug.webDebug = true;
-                global.currentClient.send(JSON.stringify({ type: 'canLaunchModules' }));
+                //global.inDebug.webDebug = true;
+                //global.currentClient.send(JSON.stringify({ type: 'canLaunchModules' }));
                 clearInterval(connectionInterval);
                 return attachDebugger(debuggerJson[0].webSocketDebuggerUrl, adb_conn);
             }).catch(
@@ -43,14 +43,12 @@ function attachDebugger(wsUrl, adb_conn) {
         const msg = JSON.parse(message.data);
 
         // Future-proof it just incase the page reloads/something happens.
-        if (msg.method && msg.method == 'Runtime.executionContextCreated') {
+        if (msg.method && msg.method == 'Runtime.executionContextCreated' && msg.params.context.origin == "https://www.youtube.com") {
             contextID = msg.params.context.id;
-            if (global.currentModule && global.currentModule.type === 'mods') {
-                fetch(global.currentModule.path).then(res => res.text()).then(modFile => {
-                    client.send(JSON.stringify({ "id": currentID, "method": "Runtime.evaluate", "params": { "expression": modFile, "objectGroup": "console", "includeCommandLineAPI": true, "doNotPauseOnExceptionsAndMuteConsole": false, "contextId": msg.params.context.id, "returnByValue": false, "generatePreview": true } }))
-                    currentID++;
-                });
-            }
+            fetch(global.currentModule.path).then(res => res.text()).then(modFile => {
+                client.send(JSON.stringify({ "id": currentID, "method": "Runtime.evaluate", "params": { "expression": modFile, "objectGroup": "console", "includeCommandLineAPI": true, "doNotPauseOnExceptionsAndMuteConsole": false, "contextId": msg.params.context.id, "returnByValue": false, "generatePreview": true } }))
+                currentID++;
+            });
         }
     }
 

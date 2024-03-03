@@ -31,7 +31,7 @@ module.exports.onStart = function () {
         adb._stream.on('connect', () => {
             console.log('ADB connection established');
             //Launch app
-            const shellCmd = adb.createStream(`shell:0 debug xvvl3S1bvH.TizenBrewStandalone${isTizen3 ? ' 0' : ''}`);
+            const shellCmd = adb.createStream(`shell:0 debug Ad6NutHP8l.TizenTube${isTizen3 ? ' 0' : ''}`);
             shellCmd.on('data', function dataIncoming(data) {
                 const dataString = data.toString();
                 if (dataString.includes('debug')) {
